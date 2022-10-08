@@ -19,7 +19,7 @@ tus contactos de forma muy sencilla y sin rodeos
 
 ## Como empezar
 
-1. Clonar este repositorio **git clone https://github.com/danieldevelop/saludar_swing.git**
-2. Haga doble click **saludar_swing_exe.jar**, que se encuentra dentro del directorio _dist_
+1. Clonar este repositorio **git clone https://github.com/danieldevelop/agenda_telefonica.git**
+2. Haga doble click **agenda_telefonica_exe.jar**, que se encuentra dentro del directorio _dist_
     - Nota: para que esto tiene que tenes instalado JDK version 8 o superior
 3. ¡Listo!
