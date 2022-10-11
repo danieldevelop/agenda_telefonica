@@ -33,7 +33,7 @@ public class AgendaTelefonicaFrame extends JFrame {
 		setResizable(false);
 		setTitle("Agenda Telefonica");
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		setBounds(100, 100, 615, 350);
+		setBounds(100, 100, 615, 362);
 		setLocationRelativeTo(null);
 		contentPane = new JPanel();
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
@@ -60,6 +60,13 @@ public class AgendaTelefonicaFrame extends JFrame {
 		scrollPane.setViewportView(tblListaContacto);
 
 		JButton btnAgregarContacto = new JButton("Nuevo Contacto");
+		btnAgregarContacto.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				dispose();
+				GuardarContactoFrame save = new GuardarContactoFrame();
+				save.setVisible(true);
+			}
+		});
 		btnAgregarContacto.setFont(new Font("Tahoma", Font.PLAIN, 13));
 		btnAgregarContacto.setBounds(435, 24, 128, 29);
 		contentPane.add(btnAgregarContacto);
@@ -69,6 +76,16 @@ public class AgendaTelefonicaFrame extends JFrame {
 		contentPane.add(lblTotalRegistros);
 
 		lblTotalRegistros.setText(String.format("Cantidad de contactos: %d", cc.totalRegistros()));
+		
+		JButton btnActualizarContacto = new JButton("Actualizar Contacto");
+		btnActualizarContacto.setFont(new Font("Tahoma", Font.PLAIN, 13));
+		btnActualizarContacto.setBounds(21, 280, 158, 29);
+		contentPane.add(btnActualizarContacto);
+		
+		JButton btnEliminarContacto = new JButton("Eliminar Contacto");
+		btnEliminarContacto.setFont(new Font("Tahoma", Font.PLAIN, 13));
+		btnEliminarContacto.setBounds(200, 280, 138, 29);
+		contentPane.add(btnEliminarContacto);
 		
 		// Cargamos los datos a la tabla al iniciar la aplicacion
 		cargaTabla();
