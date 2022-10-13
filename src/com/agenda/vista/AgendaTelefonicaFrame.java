@@ -80,6 +80,14 @@ public class AgendaTelefonicaFrame extends JFrame {
 		lblTotalRegistros.setText(String.format("Cantidad de contactos: %d", cc.totalRegistros()));
 
 		JButton btnActualizarContacto = new JButton("Actualizar Contacto");
+		btnActualizarContacto.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				dispose();
+				ActualizarContactoFrame update = new ActualizarContactoFrame();
+				update.setVisible(true);
+			}
+		});
 		btnActualizarContacto.setFont(new Font("Tahoma", Font.PLAIN, 13));
 		btnActualizarContacto.setBounds(21, 280, 158, 29);
 		contentPane.add(btnActualizarContacto);
