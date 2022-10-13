@@ -119,7 +119,7 @@ public class ContactoController {
 		}
 	}
 
-	public int eliminar(int id) {
+	public int eliminar(int id) { // ? Se podra utilizar el objeto Contacto
 		Connection con = new ConexionDB().recuperarConexion();
 		PreparedStatement statement;
 
@@ -177,5 +177,35 @@ public class ContactoController {
 		}
 		
 		return false;
+	}
+	
+	public int modificar(Contacto contacto) {
+		Connection con = new ConexionDB().recuperarConexion();
+		PreparedStatement statement;
+
+		String sql = "UPDATE contacto ";
+		sql += "SET nombre = ?, apellidos = ?, movil = ?, trabajo = ?, correo = ? ";
+		sql += "WHERE id = ?; ";
+		
+		try {
+			statement = con.prepareStatement(sql);
+			statement.setString(1, contacto.getNombre());
+			statement.setString(2, contacto.getApellidos());
+			statement.setInt(3, contacto.getMovil());
+			statement.setInt(4, contacto.getTrabajo());
+			statement.setString(5, contacto.getCorreo());
+			statement.setInt(6, contacto.getId());
+			statement.execute();
+			
+			updateCount = statement.getUpdateCount();
+			
+			statement.close();
+			con.close();
+			
+		} catch (SQLException e) {
+			System.out.println("E-DG8: " + e.getMessage());
+		}
+		
+		return updateCount;
 	}
 }
