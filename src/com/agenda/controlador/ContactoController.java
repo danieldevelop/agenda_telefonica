@@ -142,4 +142,40 @@ public class ContactoController {
 		
 		return updateCount;
 	}
+	
+	public boolean buscarContacto(int id) {
+		Connection con = new ConexionDB().recuperarConexion();
+		PreparedStatement statement;
+		ResultSet resultado;
+		
+		if (con != null) { // Si el servidor MySQL no esta only, mostrara el alert y dara una execption
+			String sql = "SELECT c.id FROM contacto c ";
+			sql += "WHERE c.id = ? ";
+			
+			try {
+				statement = con.prepareStatement(sql);
+				statement.setInt(1, id);
+				statement.execute();
+				
+				resultado = statement.getResultSet();
+				
+				if (resultado.next()) {
+					return true;
+				} else {
+					alert.showMessageDialog(null, "Contacto no encontrado o no existe", 2);
+				}
+				
+				statement.close();
+				resultado.close();
+				con.close();
+				
+			} catch (Exception e) {
+				System.out.println("E-DG6: " + e.getMessage());
+			}
+		} else {
+			alert.showMessageDialog(null, "E-DG7: Problemas con el servidor", 0);
+		}
+		
+		return false;
+	}
 }
