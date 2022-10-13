@@ -8,6 +8,7 @@ import com.agenda.BBDD.ConexionDB;
 import com.agenda.controlador.ContactoController;
 import com.agenda.functions.MensajeBox;
 import com.agenda.functions.Validar;
+import com.agenda.modelo.Contacto;
 
 import javax.swing.JLabel;
 import java.awt.Font;
@@ -204,6 +205,37 @@ public class ActualizarContactoFrame extends JFrame {
 		txtCorreoContacto.setColumns(10);
 		
 		JButton btnActualizar = new JButton("Actualizar");
+		btnActualizar.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				int confirmado = alert.showConfirmDialog(rootPane, "¿Estas Seguro?");
+				
+				if (confirmado == 0) {
+					try {
+						Contacto contact = new Contacto();
+						
+						contact.setId(Integer.parseInt(txtID.getText()));
+						contact.setNombre(txtNombreContacto.getText().trim());
+						contact.setApellidos(txtApellidosContacto.getText().trim());
+						contact.setMovil(Integer.parseInt(txtMovilContacto.getText().trim()));
+						contact.setTrabajo((txtTrabajoContacto.getText().isEmpty()) ? 0 : Integer.parseInt(txtTrabajoContacto.getText()));
+						contact.setCorreo(txtCorreoContacto.getText().trim());
+						
+						int cantidadActualizada = cc.modificar(contact);
+						
+						if (cantidadActualizada == 1) {
+							alert.showMessageDialog(rootPane, "Contacto actualizado correctamente", 1);
+						} else {
+							alert.showMessageDialog(rootPane, 
+									"Error, el contacto con ID " + txtID.getText() + "no fue actualizado", 0);
+						}
+						
+					} catch (Exception ex) {
+						System.out.println("E-DG9: " + ex.getMessage());
+					}
+				}
+			}
+		});
 		btnActualizar.setFont(new Font("Tahoma", Font.PLAIN, 13));
 		btnActualizar.setBounds(10, 215, 94, 29);
 		contentPane.add(btnActualizar);
