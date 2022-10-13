@@ -1,7 +1,5 @@
 package com.agenda.vista;
 
-import java.awt.EventQueue;
-
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
@@ -16,8 +14,9 @@ import java.awt.Color;
 import javax.swing.JScrollPane;
 import javax.swing.table.DefaultTableModel;
 
-import com.agenda.BBDD.ConexionDB;
 import com.agenda.controlador.ContactoController;
+import com.agenda.functions.MensajeBox;
+import com.agenda.functions.Validar;
 
 public class AgendaTelefonicaFrame extends JFrame {
 
@@ -25,6 +24,8 @@ public class AgendaTelefonicaFrame extends JFrame {
 	private JTable tblListaContacto;
 	private DefaultTableModel modelo;
 	ContactoController cc = new ContactoController();
+	MensajeBox alert = new MensajeBox();
+	Validar valida = new Validar();
 
 	/**
 	 * Create the frame.
@@ -61,6 +62,7 @@ public class AgendaTelefonicaFrame extends JFrame {
 
 		JButton btnAgregarContacto = new JButton("Nuevo Contacto");
 		btnAgregarContacto.addActionListener(new ActionListener() {
+			@Override
 			public void actionPerformed(ActionEvent e) {
 				dispose();
 				GuardarContactoFrame save = new GuardarContactoFrame();
@@ -76,37 +78,64 @@ public class AgendaTelefonicaFrame extends JFrame {
 		contentPane.add(lblTotalRegistros);
 
 		lblTotalRegistros.setText(String.format("Cantidad de contactos: %d", cc.totalRegistros()));
-		
+
 		JButton btnActualizarContacto = new JButton("Actualizar Contacto");
 		btnActualizarContacto.setFont(new Font("Tahoma", Font.PLAIN, 13));
 		btnActualizarContacto.setBounds(21, 280, 158, 29);
 		contentPane.add(btnActualizarContacto);
-		
+
 		JButton btnEliminarContacto = new JButton("Eliminar Contacto");
+		btnEliminarContacto.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				String idContacto = alert.showInputDialog(rootPane, "INGRESE EL ID DEL CONTACTO");
+
+				// Revisar despues null, cuando se presiona el boton Cancel
+				if (valida.estaVacio(idContacto)) {
+					alert.showMessageDialog(rootPane, "Debe Ingresar un ID de Contacto", 0);
+				} else {
+					int confirmado = alert.showConfirmDialog(rootPane,
+							String.format("Estás seguro de eliminar el contacto %s", idContacto));
+
+					if (confirmado == 0) {
+						try {
+							int id = Integer.parseInt(idContacto.trim());
+							int cantidadEliminada = cc.eliminar(id);
+
+							if (cantidadEliminada == 1) {
+								alert.showMessageDialog(null, "Contacto eliminado exitosamente", 1);
+								limpiarJTable();
+								cargaTabla();
+								lblTotalRegistros.setText(String.format("Cantidad de contactos: %d", cc.totalRegistros()));
+							} else {
+								alert.showMessageDialog(null,
+										"Error, el contacto con ID " + idContacto + " no fue eliminado ", 0);
+							}
+
+						} catch (Exception ex) {
+							System.out.println("E-DG5: " + ex.getMessage());
+						}
+					}
+				}
+			}
+		});
 		btnEliminarContacto.setFont(new Font("Tahoma", Font.PLAIN, 13));
 		btnEliminarContacto.setBounds(200, 280, 138, 29);
 		contentPane.add(btnEliminarContacto);
-		
+
 		// Cargamos los datos a la tabla al iniciar la aplicacion
 		cargaTabla();
 	}
-	
+
 	private void cargaTabla() {
 		modelo = (DefaultTableModel) tblListaContacto.getModel();
 		try {
 			var contactos = cc.listar();
-			
+
 			try {
-				contactos.forEach(contacto
-						-> modelo.addRow(new Object[]{
-								contacto.get("id"),
-								contacto.get("nombre"),
-								contacto.get("apellidos"),
-								contacto.get("movil"),
-								contacto.get("trabajo"),
-								contacto.get("correo")
-							})
-						);
+				contactos.forEach(contacto -> modelo
+						.addRow(new Object[] { contacto.get("id"), contacto.get("nombre"), contacto.get("apellidos"),
+								contacto.get("movil"), contacto.get("trabajo"), contacto.get("correo") }));
 			} catch (Exception e) {
 				throw e;
 			}
@@ -114,6 +143,13 @@ public class AgendaTelefonicaFrame extends JFrame {
 			System.err.println(e.getMessage());
 		}
 	}
+
+	private void limpiarJTable() {
+		modelo = (DefaultTableModel) tblListaContacto.getModel();
+		int filas = tblListaContacto.getRowCount();
+
+		for (int i = 0; filas > i; i++) {
+			modelo.removeRow(0);
+		}
+	}
 }
-
-
