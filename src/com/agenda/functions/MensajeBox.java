@@ -26,4 +26,12 @@ public class MensajeBox {
 	public void showMessageDialog(JRootPane contentPane, String mensaje, Integer icono) {
 		JOptionPane.showMessageDialog(contentPane, mensaje, TITULO, icono);
 	}
+	
+	public String showInputDialog(JRootPane contentPane, String mensaje) {
+		return (String) JOptionPane.showInputDialog(contentPane, mensaje, TITULO, 3);
+	}
+	
+	public int showConfirmDialog(JRootPane contentPane, String mensaje) {
+		return (int) JOptionPane.showConfirmDialog(contentPane, mensaje, TITULO, JOptionPane.OK_OPTION);
+	}
 }
