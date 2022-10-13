@@ -18,8 +18,9 @@ import com.agenda.modelo.Contacto;
 
 public class ContactoController {
 
+	private int updateCount;
 	MensajeBox alert = new MensajeBox();
-	
+
 	public Integer totalRegistros() {
 		Connection con = new ConexionDB().recuperarConexion();
 		PreparedStatement statement;
@@ -43,7 +44,7 @@ public class ContactoController {
 				con.close();
 
 			} catch (SQLException e) {
-				alert.showMessageDialog(null, "E-DG1: " + e.getMessage(), 0);
+				System.out.println("E-DG1: " + e.getMessage());
 			}
 		} else {
 			alert.showMessageDialog(null, "E-DG2: Problema con el servidor MySQL", 0);
@@ -77,6 +78,7 @@ public class ContactoController {
 
 			dato.add(fila);
 		}
+
 		statement.close();
 		resultado.close();
 		con.close();
@@ -113,7 +115,31 @@ public class ContactoController {
 			con.close();
 
 		} catch (SQLException e) {
-			alert.showMessageDialog(null, "E-DG3: " + e.getMessage(), 0);
+			System.out.println("E-DG3: " + e.getMessage());
 		}
+	}
+
+	public int eliminar(int id) {
+		Connection con = new ConexionDB().recuperarConexion();
+		PreparedStatement statement;
+
+		String sql = "DELETE FROM contacto ";
+		sql += "WHERE id = ?; ";
+
+		try {
+			statement = con.prepareStatement(sql);
+			statement.setInt(1, id);
+			statement.execute();
+
+			updateCount = statement.getUpdateCount(); // Es importante, asignar el resultado a una variable int
+			
+			statement.close();
+			con.close();
+			
+		} catch (SQLException e) {
+			System.out.println("E-DG4: " + e.getMessage());
+		}
+		
+		return updateCount;
 	}
 }
