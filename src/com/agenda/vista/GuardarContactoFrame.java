@@ -142,6 +142,7 @@ public class GuardarContactoFrame extends JFrame {
 					contact.setCorreo(txtCorreo.getText().trim());
 
 					cc.guardar(contact);
+					limpiarCampos();
 				}
 			}
 		});
@@ -166,5 +167,13 @@ public class GuardarContactoFrame extends JFrame {
 		btnVerContactos.setFont(new Font("Tahoma", Font.PLAIN, 13));
 		btnVerContactos.setBounds(281, 218, 132, 29);
 		contentPane.add(btnVerContactos);
+	}
+	
+	private void limpiarCampos() {
+		this.txtNombre.setText("");
+		this.txtApellidos.setText("");
+		this.txtMovil.setText("");
+		this.txtTrabajo.setText("");
+		this.txtCorreo.setText("");
 	}
 }
